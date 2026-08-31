@@ -11,16 +11,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-function switchTab(tabId) {
+function switchTab(tabId, element) {
     document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
     document.querySelectorAll(".nav-btn").forEach(el => el.classList.remove("active"));
     
     document.getElementById(`tab-${tabId}`).classList.add("active");
-    event.target.classList.add("active");
-
-    if (tabId === "overview") fetchStats();
-    if (tabId === "binds") fetchBinds();
-    if (tabId === "users") fetchUsers();
+    if (element) {
+        element.classList.add("active");
+    }
 }
 
 function saveConnectionSettings() {
@@ -36,6 +34,14 @@ function saveConnectionSettings() {
     fetchDashboardData();
 }
 
+function updateConnectionStatus(success, message) {
+    const statusEl = document.getElementById("connection-status");
+    statusEl.textContent = message;
+    statusEl.style.color = success ? "#2ea043" : "#da3633";
+    statusEl.style.marginLeft = "16px";
+    statusEl.style.fontWeight = "bold";
+}
+
 async function apiRequest(endpoint, options = {}) {
     const headers = {
         "Authorization": `Bearer ${API_KEY}`,
@@ -45,10 +51,15 @@ async function apiRequest(endpoint, options = {}) {
 
     try {
         const response = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        if (!response.ok) {
+            updateConnectionStatus(false, `Error: HTTP ${response.status}`);
+            return null;
+        }
+        updateConnectionStatus(true, "Connected");
         return await response.json();
     } catch (err) {
         console.error("API Request Error:", err);
+        updateConnectionStatus(false, "Connection Failed");
         return null;
     }
 }
@@ -94,7 +105,7 @@ async function fetchBinds() {
 }
 
 async function deleteBind(bindId) {
-    if (!confirm(`Delete bind ${bindId}?`)) return;
+    if (!confirm(`Are you sure you want to delete bind ID ${bindId}?`)) return;
     const res = await apiRequest(`/api/binds/${bindId}`, { method: "DELETE" });
     if (res && res.success) {
         fetchBinds();

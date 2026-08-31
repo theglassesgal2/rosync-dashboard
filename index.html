@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Bot Dashboard</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Control Panel</h2>
+        <nav>
+            <button class="nav-btn active" onclick="switchTab('overview', this)">Overview</button>
+            <button class="nav-btn" onclick="switchTab('binds', this)">Group Binds</button>
+            <button class="nav-btn" onclick="switchTab('users', this)">Verified Users</button>
+            <button class="nav-btn" onclick="switchTab('settings', this)">API Connection</button>
+        </nav>
+    </div>
+
+    <main class="content">
+        <section id="settings-banner" class="banner">
+            <label>API Endpoint: <input type="text" id="api-url" placeholder="http://YOUR_SERVER_IP:8080"></label>
+            <label>API Key: <input type="password" id="api-key" placeholder="Enter API Key"></label>
+            <button onclick="saveConnectionSettings()">Connect</button>
+            <span id="connection-status" class="status-indicator"></span>
+        </section>
+
+        <section id="tab-overview" class="tab-content active">
+            <h1>System Overview</h1>
+            <div class="stats-grid">
+                <div class="card"><h3>Bot Status</h3><p id="stat-bot-name">Disconnected</p></div>
+                <div class="card"><h3>Connected Guilds</h3><p id="stat-guilds">0</p></div>
+                <div class="card"><h3>Verified Users</h3><p id="stat-users">0</p></div>
+                <div class="card"><h3>Active Role Binds</h3><p id="stat-binds">0</p></div>
+            </div>
+        </section>
+
+        <section id="tab-binds" class="tab-content">
+            <h1>Active Group Role Binds</h1>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Guild ID</th>
+                        <th>Roblox Group ID</th>
+                        <th>Min Rank</th>
+                        <th>Max Rank</th>
+                        <th>Discord Role ID</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="binds-table-body">
+                    <tr><td colspan="7">Connect API to view binds.</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="tab-users" class="tab-content">
+            <h1>Verified Members</h1>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Discord ID</th>
+                        <th>Roblox ID</th>
+                        <th>Roblox Username</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body">
+                    <tr><td colspan="3">Connect API to view verified members.</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="tab-settings" class="tab-content">
+            <h1>Connection Configuration</h1>
+            <div class="card settings-card">
+                <p>Configure the connection to your hosted Python Bot API backend.</p>
+                <div class="form-group">
+                    <label>Server Base URL:</label>
+                    <input type="text" id="config-api-url" placeholder="http://127.0.0.1:8080">
+                </div>
+                <div class="form-group">
+                    <label>Secret API Key:</label>
+                    <input type="password" id="config-api-key">
+                </div>
+                <button onclick="saveConnectionSettings()">Save & Test Connection</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="./app.js"></script>
+</body>
+</html>
